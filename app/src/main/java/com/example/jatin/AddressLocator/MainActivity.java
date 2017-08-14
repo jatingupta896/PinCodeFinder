@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements NetworkConnectivi
                 location = Locality + ", " + Area + ", " + City + ", " + State + ", " + Country;
                 Intent intent = new Intent(MainActivity.this, MapActivity.class);
                 intent.putExtra("Location", location);
+                intent.putExtra("Flag","1");
                 startActivityForResult(intent, 7777);
             } else {
                 Snackbar snackbar = Snackbar
@@ -180,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements NetworkConnectivi
             location = latitude + "," + longitude;
             Intent intent = new Intent(MainActivity.this, MapActivity.class);
             intent.putExtra("Location", location);
+            intent.putExtra("Flag","2");
             startActivityForResult(intent, 7777);
         } else {
             Snackbar snackbar = Snackbar

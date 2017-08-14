@@ -33,6 +33,7 @@ public class MapActivity extends AppCompatActivity implements
     private Geocoder geocoder;
     private TextView pincode;
     private boolean mPermissionDenied = false;
+    int flag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class MapActivity extends AppCompatActivity implements
         mapFragment.getMapAsync(this);
         Intent intent = getIntent();
         location = intent.getStringExtra("Location");
+        flag= Integer.parseInt(intent.getStringExtra("Flag"));
     }
 
     @Override
@@ -53,44 +55,41 @@ public class MapActivity extends AppCompatActivity implements
 
         if (location != null || !location.equals("") && geocoder.isPresent()) {
             Geocoder geocoder = new Geocoder(this);
-            if (addressList == null || addressList.size() == 0) {
-                Snackbar snackbar = Snackbar
-                        .make(findViewById(R.id.map), "Invalid Address or address is not found" + location, Snackbar.LENGTH_SHORT);
+//            if (addressList == null || addressList.size() == 0) {
+//                Snackbar snackbar = Snackbar
+//                        .make(findViewById(R.id.map), "Invalid Address or address is not found" + location, Snackbar.LENGTH_SHORT);
+//
+//                snackbar.show();
+//                startActivity(new Intent(this, MainActivity.class));
+//            } else {
+            try {
+                addressList = geocoder.getFromLocationName(location, 1);
 
-                snackbar.show();
-                startActivity(new Intent(this, MainActivity.class));
-            } else {
-                try {
-                    addressList = geocoder.getFromLocationName(location, 1);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                Address address = addressList.get(0);
-                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                mMap.addMarker(new MarkerOptions().position(latLng).title("Location"));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
-
-                mMap.getMaxZoomLevel();
-                double lattitude = address.getLatitude();
-                double longitude = address.getLongitude();
-                if (address.getPostalCode() == null) {
-                    pincode.setText("Unable to find, Please modify your Address");
-                } else {
-                    pincode.setText(address.getPostalCode());
-                }
-                Snackbar snackbar = Snackbar
-                        .make(findViewById(R.id.map), " Lattitude: " + lattitude + " Longitude: " + longitude + " Address: " + location, Snackbar.LENGTH_SHORT);
-
-                snackbar.show();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            // Toast.makeText(this, " Lattitude: " + lattitude + " Longitude: " + longitude + " Address: " + location, Toast.LENGTH_LONG).show();
-        } else
 
-        {
+            Address address = addressList.get(0);
+            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(latLng).title("Location"));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
+
+            mMap.getMaxZoomLevel();
+            double lattitude = address.getLatitude();
+            double longitude = address.getLongitude();
+            if (address.getPostalCode() == null) {
+                pincode.setText("Unable to find, Please modify your Address");
+            } else {
+                pincode.setText(address.getPostalCode());
+            }
+            Snackbar snackbar = Snackbar
+                    .make(findViewById(R.id.map), " Lattitude: " + lattitude + " Longitude: " + longitude + " Address: " + location, Snackbar.LENGTH_SHORT);
+
+            snackbar.show();
+            //}
+            // Toast.makeText(this, " Lattitude: " + lattitude + " Longitude: " + longitude + " Address: " + location, Toast.LENGTH_LONG).show();
+        } else {
             Toast.makeText(this, "Invalid Address", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, MainActivity.class));
         }
 
         enableMyLocation();
@@ -144,4 +143,9 @@ public class MapActivity extends AppCompatActivity implements
                 .newInstance(true).show(getSupportFragmentManager(), "dialog");
     }
 
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//        startActivity(new Intent(this,MainActivity.class));
+//    }
 }
