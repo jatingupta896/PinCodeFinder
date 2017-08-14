@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "300785485533",
+    "firebase_url": "https://address-search-bd485.firebaseio.com",
+    "project_id": "address-search-bd485",
+    "storage_bucket": "address-search-bd485.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:300785485533:android:fe73e34fdaea68a1",
+        "android_client_info": {
+          "package_name": "com.example.jatin.AddressLocator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "300785485533-bfjqhkn27e4p10q2gm05cg30o9lupuhd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5yHhuvPNP8k5Rg3OZe5dXQ22FspEeoMY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
