@@ -44,8 +44,8 @@ public class MapActivity extends AppCompatActivity implements
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         Intent intent = getIntent();
-        location = intent.getStringExtra("Location");
-        flag= Integer.parseInt(intent.getStringExtra("Flag"));
+        location = intent.getStringExtra("LocationDetails");
+       // flag = Integer.parseInt(intent.getStringExtra("Flag"));
     }
 
     @Override
@@ -55,13 +55,6 @@ public class MapActivity extends AppCompatActivity implements
 
         if (location != null || !location.equals("") && geocoder.isPresent()) {
             Geocoder geocoder = new Geocoder(this);
-//            if (addressList == null || addressList.size() == 0) {
-//                Snackbar snackbar = Snackbar
-//                        .make(findViewById(R.id.map), "Invalid Address or address is not found" + location, Snackbar.LENGTH_SHORT);
-//
-//                snackbar.show();
-//                startActivity(new Intent(this, MainActivity.class));
-//            } else {
             try {
                 addressList = geocoder.getFromLocationName(location, 1);
 
@@ -73,7 +66,6 @@ public class MapActivity extends AppCompatActivity implements
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
             mMap.addMarker(new MarkerOptions().position(latLng).title("Location"));
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
-
             mMap.getMaxZoomLevel();
             double lattitude = address.getLatitude();
             double longitude = address.getLongitude();
@@ -86,14 +78,10 @@ public class MapActivity extends AppCompatActivity implements
                     .make(findViewById(R.id.map), " Lattitude: " + lattitude + " Longitude: " + longitude + " Address: " + location, Snackbar.LENGTH_SHORT);
 
             snackbar.show();
-            //}
-            // Toast.makeText(this, " Lattitude: " + lattitude + " Longitude: " + longitude + " Address: " + location, Toast.LENGTH_LONG).show();
+            enableMyLocation();
         } else {
             Toast.makeText(this, "Invalid Address", Toast.LENGTH_SHORT).show();
         }
-
-        enableMyLocation();
-
     }
 
     private void enableMyLocation() {
@@ -142,10 +130,4 @@ public class MapActivity extends AppCompatActivity implements
         PermissionUtils.PermissionDeniedDialog
                 .newInstance(true).show(getSupportFragmentManager(), "dialog");
     }
-
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//        startActivity(new Intent(this,MainActivity.class));
-//    }
 }
