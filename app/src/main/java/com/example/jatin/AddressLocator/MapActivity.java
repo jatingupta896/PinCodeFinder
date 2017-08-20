@@ -1,6 +1,7 @@
 package com.example.jatin.AddressLocator;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -45,42 +46,49 @@ public class MapActivity extends AppCompatActivity implements
         mapFragment.getMapAsync(this);
         Intent intent = getIntent();
         location = intent.getStringExtra("LocationDetails");
-       // flag = Integer.parseInt(intent.getStringExtra("Flag"));
+        // flag = Integer.parseInt(intent.getStringExtra("Flag"));
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        List<Address> addressList = null;
+        try {
+            mMap = googleMap;
+            List<Address> addressList = null;
 
-        if (location != null || !location.equals("") && geocoder.isPresent()) {
-            Geocoder geocoder = new Geocoder(this);
-            try {
-                addressList = geocoder.getFromLocationName(location, 1);
+            if (location != null || !location.equals("") && geocoder.isPresent()) {
+                Geocoder geocoder = new Geocoder(this);
+                try {
+                    addressList = geocoder.getFromLocationName(location, 1);
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            Address address = addressList.get(0);
-            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(latLng).title("Location"));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
-            mMap.getMaxZoomLevel();
-            double lattitude = address.getLatitude();
-            double longitude = address.getLongitude();
-            if (address.getPostalCode() == null) {
-                pincode.setText("Unable to find, Please modify your Address");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ProgressDialog pd = new ProgressDialog(MapActivity.this);
+                pd.setMessage("loading");
+                pd.show();
+                Address address = addressList.get(0);
+                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                mMap.addMarker(new MarkerOptions().position(latLng).title("Location"));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
+                mMap.getMaxZoomLevel();
+                double lattitude = address.getLatitude();
+                double longitude = address.getLongitude();
+                if (address.getPostalCode() == null) {
+                    pincode.setText("Unable to find, Please modify your Address");
+                } else {
+                    pincode.setText(address.getPostalCode());
+                }
+                Snackbar snackbar = Snackbar
+                        .make(findViewById(R.id.map), " Lattitude: " + lattitude + " Longitude: " + longitude + " Address: " + location, Snackbar.LENGTH_SHORT);
+                snackbar.show();
+                enableMyLocation();
+                pd.dismiss();
             } else {
-                pincode.setText(address.getPostalCode());
+                Toast.makeText(this, "Invalid Address", Toast.LENGTH_SHORT).show();
             }
-            Snackbar snackbar = Snackbar
-                    .make(findViewById(R.id.map), " Lattitude: " + lattitude + " Longitude: " + longitude + " Address: " + location, Snackbar.LENGTH_SHORT);
-
-            snackbar.show();
-            enableMyLocation();
-        } else {
-            Toast.makeText(this, "Invalid Address", Toast.LENGTH_SHORT).show();
+        } catch (Exception exception) {
+            Toast.makeText(this, "Invalid Address", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, MainActivity.class));
         }
     }
 
